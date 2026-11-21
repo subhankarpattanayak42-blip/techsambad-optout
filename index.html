@@ -94,6 +94,15 @@
     <a class="btn ghost" href="https://www.techsambad.com">Go to techsambad.com</a>
   </section>
 
+  <!-- state: not configured -->
+  <section id="setup" class="hidden">
+    <p class="kicker">Unsubscribe</p>
+    <h1>This link is not active yet.</h1>
+    <p class="note">The unsubscribe service is still being set up. Reply to the email you received
+    with the single word <strong>unsubscribe</strong> and we will remove you within one working day.</p>
+    <a class="btn ghost" href="https://www.techsambad.com">Go to techsambad.com</a>
+  </section>
+
   <!-- state: error -->
   <section id="error" class="hidden">
     <p class="kicker">Unsubscribe</p>
@@ -118,7 +127,7 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var show = function (id) {
-    ["loading", "confirm", "done", "invalid", "error"].forEach(function (s) {
+    ["loading", "confirm", "done", "invalid", "setup", "error"].forEach(function (s) {
       $(s).classList.toggle("hidden", s !== id);
     });
   };
@@ -145,7 +154,7 @@
   $("addr").textContent = masked + "@" + parts[1];
   $("tok").value = token;
 
-  if (!ENDPOINT || ENDPOINT.indexOf("__") === 0) { show("error"); return; }
+  if (!ENDPOINT || ENDPOINT.indexOf("__") === 0) { show("setup"); return; }
   $("f").action = ENDPOINT;
   show("confirm");
 
