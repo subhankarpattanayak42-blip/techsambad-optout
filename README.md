@@ -39,22 +39,33 @@ Contacts CSV needs an `email` column (override with `--column`). Output has `ema
 
 Put `{{optout_url}}` in the outreach template as the unsubscribe link.
 
-## Deploying the endpoint (once)
+## Deploying the endpoint — already done
 
-1. Open [script.google.com](https://script.google.com) → **New project**.
-2. **Project Settings → Script properties**, add three:
+The write path is a **Vercel serverless function**, deployed and live:
 
-   | Property | Value |
-   |---|---|
-   | `OPTOUT_SECRET` | the secret from `tools/make_optout_links.py --secret` |
-   | `OPTOUT_SHEET_ID` | `1EmMw8HOuNp1H7yYlg1H__vwAsOZq_2IWWFvSYTQ7Mss` |
-   | `SHEET_TAB` | `Sheet1` |
+**https://techsambad-optout-api.vercel.app/api/optout**
 
-3. Paste `apps-script/Code.gs` in as the project's `Code.gs`.
-4. **Deploy → New deployment → Web app**:
-   - Execute as: **Me**
-   - Who has access: **Anyone**
-5. Copy the `/exec` URL, replace `__ENDPOINT__` in `index.html`, commit and push.
+Source: `vercel-api/api/optout.js`. Secrets live in the Vercel project's environment variables
+(`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `OPTOUT_SECRET`,
+`OPTOUT_SHEET_ID`, `SHEET_TAB`) — never in this repo.
+
+Redeploy after a change:
+
+```bash
+cd vercel-api && vercel deploy --prod
+```
+
+`apps-script/Code.gs` is kept as a **fallback** in case you ever want to move off Vercel — same
+token format, same sheet, deployable as a Google web app with no third-party account.
+
+### Verified end to end
+
+| Test | Result |
+|---|---|
+| Valid token POST | row appended with IST timestamp |
+| Same token again | deduped, "already on our list" |
+| Tampered signature | HTTP 400, nothing written |
+| Health check `GET /api/optout` | `{"ok":true}` |
 
 ## The suppression sheet
 
