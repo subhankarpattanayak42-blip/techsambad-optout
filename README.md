@@ -28,6 +28,29 @@ The page decodes the email only to show it back, masked. It never decides anythi
 the Apps Script endpoint recomputes the signature and rejects a token that does not match.
 So a crafted link cannot unsubscribe someone else.
 
+## Two ways in
+
+| Path | Link | Verified? |
+|---|---|---|
+| **Per-recipient** | `?t=<token>` | HMAC signature — prefills the address, cannot be forged |
+| **Generic** | bare page, or `?email=…` | none — user types their address |
+
+The **generic link** is the one to put in every email template, because a template cannot carry a
+per-recipient token:
+
+```
+https://optout.techsambad.com/
+```
+
+The recipient types their address and presses the button. The per-recipient token still powers
+faster one-click links for campaigns where you generate the list in advance.
+
+**Trade-off, stated plainly:** the generic path cannot prove the person owns the address, so
+anyone can add any address to the suppression list. Rows are therefore recorded with
+`Source = unsubscribe-form` plus requester IP and user agent, so a griefing pattern is visible in
+the sheet. If that ever becomes a real problem, the fix is a confirmation email before the
+row is committed — the endpoint already holds a mail-capable credential.
+
 ## Generating links
 
 ```bash
