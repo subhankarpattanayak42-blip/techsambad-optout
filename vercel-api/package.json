@@ -1,0 +1,7 @@
+{
+  "name": "techsambad-optout-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TechSambad unsubscribe endpoint - verifies a signed token and appends to the suppression sheet"
+}
