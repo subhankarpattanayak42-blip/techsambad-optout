@@ -1,4 +1,8 @@
-# Pointing optout.techsambad.com at the page
+# optout.techsambad.com — DONE
+
+Live. CNAME record added at GoDaddy 21 Nov 2026, GitHub Pages cut over, certificate
+approved, HTTPS enforced. The steps below are kept as the record of what was done,
+and as the recipe if the domain ever has to be moved again.
 
 One DNS record. **GoDaddy** holds the zone (`ns37/ns38.domaincontrol.com`).
 
