@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Unsubscribe — TechSambad</title>
+<style>
+  :root{
+    --bg:#090b10; --surface:#12151e; --surface2:#171b26;
+    --border:rgba(245,197,24,0.16); --border-soft:rgba(255,255,255,0.08);
+    --ink:#eaecf2; --ink-soft:#9ba4b5; --muted:#8a94a8;
+    --gold:#f5c518; --emerald:#00e5a3; --red:#ff4d4d;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);
+       font-size:17px;line-height:1.7;min-height:100vh;display:flex;flex-direction:column;
+       align-items:center;justify-content:center;padding:24px}
+  body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(ellipse 70% 40% at 50% -10%, rgba(245,197,24,0.07), transparent 70%)}
+  .card{width:100%;max-width:560px;background:var(--surface);border:1px solid var(--border-soft);
+        border-radius:16px;padding:36px 34px;box-shadow:0 8px 40px rgba(0,0,0,.65)}
+  .brand{font-family:var(--sans);font-size:1.35rem;font-weight:900;letter-spacing:-.02em;
+         color:#fff;margin:0 0 26px}
+  .brand span{color:var(--gold)}
+  .kicker{font-family:var(--sans);font-size:.72rem;font-weight:800;letter-spacing:.08em;
+          text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+  h1{font-family:var(--sans);font-size:clamp(1.5rem,4vw,2rem);font-weight:900;line-height:1.15;
+     letter-spacing:-.02em;color:#fff;margin:0 0 14px}
+  p{margin:0 0 14px;color:var(--ink-soft)}
+  .addr{font-family:var(--sans);font-size:1rem;font-weight:700;color:var(--ink);
+        background:var(--surface2);border:1px solid var(--border-soft);border-radius:8px;
+        padding:12px 16px;margin:0 0 22px;word-break:break-all}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;
+       padding:12px 24px;border-radius:8px;border:1px solid transparent;cursor:pointer;
+       font-family:var(--sans);font-size:.9rem;font-weight:800;background:var(--gold);color:#000;
+       box-shadow:0 4px 20px rgba(245,197,24,.35);transition:background .18s,transform .18s}
+  .btn:hover{background:#fff;transform:translateY(-2px)}
+  .btn[disabled]{opacity:.6;cursor:default;transform:none;background:var(--gold)}
+  .ghost{background:transparent;color:var(--ink);border-color:var(--border-soft);box-shadow:none}
+  .ghost:hover{background:transparent;border-color:var(--gold);color:var(--gold)}
+  .small{font-family:var(--sans);font-size:.8rem;color:var(--muted);margin:18px 0 0}
+  .note{border-left:3px solid var(--gold);padding:2px 0 2px 14px;margin:0 0 20px;
+        font-size:.95rem;color:var(--ink-soft)}
+  .ok{border-left-color:var(--emerald)}
+  .hidden{display:none !important}
+  .foot{margin-top:22px;font-family:var(--sans);font-size:.72rem;color:var(--muted);
+        text-align:center;line-height:1.6}
+  a{color:var(--gold)}
+</style>
+</head>
+<body>
+<main class="card">
+
+  <div class="brand">Tech<span>Sambad</span></div>
+
+  <!-- state: loading -->
+  <section id="loading">
+    <p class="kicker">Unsubscribe</p>
+    <h1>Checking your link…</h1>
+  </section>
+
+  <!-- state: confirm -->
+  <section id="confirm" class="hidden">
+    <p class="kicker">Unsubscribe</p>
+    <h1>Stop emails to this address?</h1>
+    <p>We will remove you from all TechSambad outreach and you will not be contacted again.</p>
+    <div class="addr" id="addr"></div>
+    <form id="f" method="POST" target="sink" action="">
+      <input type="hidden" name="t" id="tok"/>
+      <button class="btn" type="submit" id="go">Unsubscribe me</button>
+    </form>
+    <p class="small">Changed your mind? Just close this page — nothing happens until you press the button.</p>
+  </section>
+
+  <!-- state: done -->
+  <section id="done" class="hidden">
+    <p class="kicker">Done</p>
+    <h1>You are unsubscribed.</h1>
+    <p class="note ok">We have removed this address from our list and will not write to you again.</p>
+    <p>If you ever want the AI news brief back, the site is always open — no email needed.</p>
+    <a class="btn ghost" href="https://www.techsambad.com">Go to techsambad.com</a>
+  </section>
+
+  <!-- state: invalid -->
+  <section id="invalid" class="hidden">
+    <p class="kicker">Unsubscribe</p>
+    <h1>This link is incomplete.</h1>
+    <p class="note">The unsubscribe link looks truncated — mail apps sometimes break long links across
+    lines. Reply to the email you received with the single word <strong>unsubscribe</strong> and we
+    will remove you within one working day.</p>
+    <a class="btn ghost" href="https://www.techsambad.com">Go to techsambad.com</a>
+  </section>
+
+  <!-- state: error -->
+  <section id="error" class="hidden">
+    <p class="kicker">Unsubscribe</p>
+    <h1>That did not go through.</h1>
+    <p class="note">Your request could not be recorded. Please reply to the email with the word
+    <strong>unsubscribe</strong> and we will remove you within one working day.</p>
+    <button class="btn ghost" onclick="location.reload()">Try again</button>
+  </section>
+
+  <p class="foot">
+    TechSambad (OPC) Private Limited · techsambad.com<br/>
+    We only email people about our own programmes. No lists are sold or shared.
+  </p>
+</main>
+
+<iframe name="sink" id="sink" style="display:none" title="unsubscribe result"></iframe>
+
+<script>
+(function () {
+  // Set this to your deployed Apps Script web app URL (see apps-script/Code.gs).
+  var ENDPOINT = "__ENDPOINT__";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var show = function (id) {
+    ["loading", "confirm", "done", "invalid", "error"].forEach(function (s) {
+      $(s).classList.toggle("hidden", s !== id);
+    });
+  };
+
+  var token = new URLSearchParams(location.search).get("t") || "";
+
+  // token shape: <base64url(email)>.<16 hex chars>
+  if (!token || token.indexOf(".") < 1) { show("invalid"); return; }
+
+  var email = "";
+  try {
+    var b64 = token.split(".")[0].replace(/-/g, "+").replace(/_/g, "/");
+    while (b64.length % 4) { b64 += "="; }
+    email = decodeURIComponent(escape(atob(b64)));
+  } catch (e) { show("invalid"); return; }
+
+  if (!email || email.indexOf("@") < 1) { show("invalid"); return; }
+
+  // mask the middle so the page does not echo the full address to shoulder-surfers
+  var parts = email.split("@");
+  var name = parts[0];
+  var masked = name.length <= 2 ? name[0] + "*"
+             : name[0] + new Array(Math.max(name.length - 1, 1)).join("*") + name[name.length - 1];
+  $("addr").textContent = masked + "@" + parts[1];
+  $("tok").value = token;
+
+  if (!ENDPOINT || ENDPOINT.indexOf("__") === 0) { show("error"); return; }
+  $("f").action = ENDPOINT;
+  show("confirm");
+
+  // the iframe form post is deliberate: Apps Script does not send CORS headers, and a
+  // plain form POST always lands. We show the success state on submit and reconcile
+  // the row server-side.
+  var submitted = false;
+  $("f").addEventListener("submit", function () {
+    submitted = true;
+    $("go").disabled = true;
+    $("go").textContent = "Removing…";
+    setTimeout(function () { show("done"); }, 700);
+  });
+
+  window.addEventListener("beforeunload", function (e) {
+    if (!submitted) { return; }
+  });
+})();
+</script>
+</body>
+</html>
